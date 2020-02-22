@@ -1,22 +1,21 @@
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
+const UpperCode = 65;
 class VigenereCipheringMachine {
     constructor(type = true) {
-        if (this.type === type) return 'direct';
-        else return 'reverse';
+        this.type = type ? 'direct' : 'reverse'
     }
 
     encrypt(message, key) {
         if (!message || !key) throw new Error();
-        message = message.toUpperCase();
-        key = key.toUpperCase();
         let encryptWord = '';
         let str = '';
         let j = 0;
+        message = message.toUpperCase();
+        key = key.toUpperCase();
         for (let i = 0; i < message.length; i++) {
             if (/[A-Z]/.test(message[i])) {
                 str = (message.charCodeAt(i) + key.charCodeAt(j % key.length)) % ALPHABET.length;
-                encryptWord += String.fromCharCode(str + 65);
+                encryptWord += String.fromCharCode(str + UpperCode);
                 j++;
             } else {
                 encryptWord += message[i];
@@ -28,30 +27,26 @@ class VigenereCipheringMachine {
 
     decrypt(message, key) {
         if (!message || !key) throw new Error();
-        message = message.toUpperCase();
-        key = key.toUpperCase();
         let decryptWord = '';
         let str = '';
         let j = 0;
+        message = message.toUpperCase();
+        key = key.toUpperCase();
         for (let i = 0; i < message.length; i++) {
             if (/[A-Z]/.test(message[i])) {
                 str = (message.charCodeAt(i) - key.charCodeAt(j % key.length));
                 if (str >= 0) {
-                    decryptWord += String.fromCharCode((str % ALPHABET.length) + 65);
+                    decryptWord += String.fromCharCode((str % ALPHABET.length) + UpperCode);
                     j++;
                 } else {
-                    decryptWord += String.fromCharCode((ALPHABET.length + str % ALPHABET.length) + 65);
+                    decryptWord += String.fromCharCode((ALPHABET.length + str % ALPHABET.length) + UpperCode);
                     j++;
                 }
-                // decryptWord += String.fromCharCode(str + 65);
-                // str < 0 ? str = 26 + str : false;
-                // if (j === key.length - 1) j = 0;
-                // else j++;
             } else {
                 decryptWord += message[i]; 
             }
         }
-        if (!this.type === 'reverse') return decryptWord.split('').reverse().join('');
+        if (this.type === 'reverse') return decryptWord.split('').reverse().join('');
         return decryptWord;
     }
 }
